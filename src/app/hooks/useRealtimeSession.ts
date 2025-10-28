@@ -43,16 +43,25 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
 
   function handleTransportEvent(event: any) {
     // Handle additional server events that aren't managed by the session
+    console.log("[Transport Event]", event.type, event);
     switch (event.type) {
+      case "conversation.item.input_audio_transcription.delta": {
+        console.log("[Transcription Delta]", event);
+        historyHandlers.handleTranscriptionDelta(event);
+        break;
+      }
       case "conversation.item.input_audio_transcription.completed": {
+        console.log("[Transcription Completed]", event);
         historyHandlers.handleTranscriptionCompleted(event);
         break;
       }
-      case "response.audio_transcript.done": {
+      case "response.output_audio_transcript.done": {
+        console.log("[Output Transcript Done]", event);
         historyHandlers.handleTranscriptionCompleted(event);
         break;
       }
-      case "response.audio_transcript.delta": {
+      case "response.output_audio_transcript.delta": {
+        console.log("[Output Transcript Delta]", event);
         historyHandlers.handleTranscriptionDelta(event);
         break;
       }

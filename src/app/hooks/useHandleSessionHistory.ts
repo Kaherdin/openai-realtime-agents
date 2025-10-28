@@ -92,10 +92,15 @@ export function useHandleSessionHistory() {
     const { itemId, role, content = [] } = item;
     if (itemId && role) {
       const isUser = role === "user";
+      const isAssistant = role === "assistant";
       let text = extractMessageText(content);
 
       if (isUser && !text) {
         text = "[Transcribing...]";
+      }
+      
+      if (isAssistant && !text) {
+        text = ""; // Start with empty text, deltas will fill it
       }
 
       // If the guardrail has been tripped, this message is a message that gets sent to the 

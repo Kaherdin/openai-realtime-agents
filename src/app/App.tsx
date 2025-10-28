@@ -166,11 +166,9 @@ function App() {
     }
   }, [selectedAgentConfigSet, selectedAgentName, sessionStatus]);
 
-  useEffect(() => {
-    if (sessionStatus === "CONNECTED") {
-      updateSession();
-    }
-  }, [isPTTActive]);
+  // Note: In v0.2.1, turn_detection cannot be modified after session creation.
+  // PTT is now handled manually via input_audio_buffer.clear/commit events
+  // in handleTalkButtonDown/Up instead of toggling VAD dynamically.
 
   const fetchEphemeralKey = async (): Promise<string | null> => {
     logClientEvent({ url: "/session" }, "fetch_session_token_request");
@@ -260,26 +258,8 @@ function App() {
   };
 
   const updateSession = (shouldTriggerResponse: boolean = false) => {
-    // Reflect Push-to-Talk UI state by (de)activating server VAD on the
-    // backend. The Realtime SDK supports live session updates via the
-    // `session.update` event.
-    const turnDetection = isPTTActive
-      ? null
-      : {
-          type: "server_vad",
-          threshold: 0.9,
-          prefix_padding_ms: 300,
-          silence_duration_ms: 500,
-          create_response: true,
-        };
-
-    sendEvent({
-      type: "session.update",
-      session: {
-        type: "realtime",
-        // turn_detection: turnDetection,
-      },
-    });
+    // Note: In v0.2.1, turn_detection can only be set at session creation,
+    // not via session.update. PTT mode will need to be handled differently.
 
     // Send an initial 'hi' message to trigger the agent to greet the user
     if (shouldTriggerResponse) {

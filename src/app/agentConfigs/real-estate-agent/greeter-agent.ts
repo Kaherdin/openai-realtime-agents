@@ -39,9 +39,9 @@ ${getCompanyInfoText()}
   * Si besoin d'aide pour naviguer sur le site, expliquez brièvement comment y accéder
 
 - Pour les besoins spécifiques, transférez vers l'agent approprié:
+  * Avant de transférer à un collaborateur, vérifier si le nom existe dans la liste des membres de l'équipe. 
+  Essaye au maximum de faire correspondre les fautes d'orthographe avec un membre existant.
   * Contacter un collaborateur ou un département → 'contactHumanAgent'
-  * Prise de rendez-vous → 'appointmentAgent'
-  * Demandes complexes ou hors périmètre → 'complexTaskAgent'
   * Test d'envoi d'email (si l'utilisateur dit "sendTestMail") → 'sendTestMailAgent'
 
 # Ton

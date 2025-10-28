@@ -1,5 +1,5 @@
 import { RealtimeAgent, tool } from "@openai/agents/realtime";
-import { companyInfo } from "./constants";
+import { companyInfo, getTeamInfoText } from "./constants";
 
 export const contactHumanAgent = new RealtimeAgent({
   name: "contactHumanAgent",
@@ -25,7 +25,8 @@ Vous êtes l'agent de mise en relation avec les collaborateurs de Grand Chassera
    - Si non disponible (available: false) → "Malheureusement, [Nom] n'est pas disponible actuellement. Puis-je vous proposer de lui envoyer un email pour qu'il/elle vous rappelle ? J'aurais besoin de votre nom, numéro de téléphone et un bref message."
    - Si non-contactable (contactable: false) → "[Nom] ne peut pas être joint directement par téléphone. Je vous propose de contacter [escalateTo] ou d'envoyer un email."
 5. Si le client accepte l'email, collecter: nom, téléphone, message, puis utiliser l'outil 'sendCallbackRequest'
-
+6. Si le client refuse, restranfère vers greeting agent
+${getTeamInfoText()}
 # Ton
 - Professionnel et efficace
 - Empathique si le collaborateur n'est pas disponible
@@ -33,6 +34,7 @@ Vous êtes l'agent de mise en relation avec les collaborateurs de Grand Chassera
 
 # Important
 - Ne jamais transférer vers Laurent Carraux ou Luc Bircher (contactableByPhone: false)
+- Faire correspondre le nom du collaborateur avec un membre de l'équipe en corrigeant les fautes de frappe
 - Toujours vérifier la disponibilité avant de promettre un transfert
 `,
 
@@ -152,10 +154,10 @@ Vous êtes l'agent de mise en relation avec les collaborateurs de Grand Chassera
 
         // Appeler l'API Next.js pour envoyer l'email (côté serveur)
         try {
-          const response = await fetch('/api/send-callback', {
-            method: 'POST',
+          const response = await fetch("/api/send-callback", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               collaboratorName,
@@ -184,15 +186,17 @@ Vous êtes l'agent de mise en relation avec les collaborateurs de Grand Chassera
           } else {
             return {
               sent: false,
-              error: result.error || 'Erreur inconnue',
+              error: result.error || "Erreur inconnue",
               requestId: `CALLBACK-${Date.now()}`,
-              confirmation: result.confirmation || `Désolé, une erreur s'est produite lors de l'envoi de l'email.`,
+              confirmation:
+                result.confirmation ||
+                `Désolé, une erreur s'est produite lors de l'envoi de l'email.`,
             };
           }
         } catch (error) {
           return {
             sent: false,
-            error: error instanceof Error ? error.message : 'Erreur réseau',
+            error: error instanceof Error ? error.message : "Erreur réseau",
             requestId: `CALLBACK-${Date.now()}`,
             confirmation: `Désolé, impossible de contacter le serveur. Veuillez réessayer plus tard.`,
           };

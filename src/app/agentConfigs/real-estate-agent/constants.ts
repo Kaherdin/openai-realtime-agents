@@ -124,3 +124,16 @@ ${companyInfo.team
   )
   .join("\n")}
 `;
+
+export const getTeamInfoText = () => `
+
+# Notre équipe:
+${companyInfo.team
+  .map(
+    (m) =>
+      `- ${m.name}${m.role ? ` - ${m.role}` : ""} | Tél: ${m.phone} | Email: ${
+        m.email
+      }`
+  )
+  .join("\n")}
+`;

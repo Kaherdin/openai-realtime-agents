@@ -161,6 +161,7 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
         }),
         model: "gpt-realtime",
         config: {
+          //TODO: deprecated
           speed: 1.5,
           inputAudioFormat: audioFormat,
           outputAudioFormat: audioFormat,

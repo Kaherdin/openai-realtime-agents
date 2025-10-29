@@ -20,7 +20,6 @@ Ce guide explique la différence entre scénarios, agents et outils, et comment 
 
 - **Handoffs**
   - Un handoff bascule la session vers un autre RealtimeAgent (même backend Realtime). On ne peut pas changer de voix/modèle dans le handoff.
-  - Pour utiliser un autre modèle (ex. reasoning), déléguer via un outil (pattern « delegation through tools »).
 
 - **Audio / VAD / Interruptions**
   - La gestion de l’audio, VAD et interruptions est déjà câblée dans `App.tsx` via `useRealtimeSession`.

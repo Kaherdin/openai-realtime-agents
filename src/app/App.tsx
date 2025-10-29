@@ -215,6 +215,7 @@ function App() {
         // const companyName = companyNameMap[agentSetKey] || 'Default Company';
         // const guardrail = createModerationGuardrail(companyName);
 
+        //DOC: useRealtimeSession hook
         await connect({
           getEphemeralKey: async () => EPHEMERAL_KEY,
           initialAgents: reorderedAgents,
